@@ -1,0 +1,17 @@
+{
+    "autoload": {
+        "psr-4": {
+            "HighLiuk\\Sync\\": "src/",
+            "HighLiuk\\Sync\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "laravel/pint": "^1.13",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.5"
+    },
+    "scripts": {
+        "lint": "pint",
+        "test": "phpunit --testdox"
+    }
+}
