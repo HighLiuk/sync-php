@@ -4,7 +4,6 @@ namespace HighLiuk\Sync;
 
 use HighLiuk\Sync\Interfaces\SyncModel;
 use HighLiuk\Sync\Interfaces\ReadableSource;
-use HighLiuk\Sync\Interfaces\SyncSource;
 
 /**
  * Helper class for the Sync class. Gets models that need writing, updating, and
@@ -39,9 +38,9 @@ class SyncUtils
 
     /**
      * @param ReadableSource<ID,TModel,TContents> $master
-     * @param SyncSource<ID,TModel,TContents> $slave
+     * @param ReadableSource<ID,TModel,TContents> $slave
      */
-    public function __construct(ReadableSource $master, SyncSource $slave)
+    public function __construct(ReadableSource $master, ReadableSource $slave)
     {
         $master_models = $this->getModels($master);
         $slave_models  = $this->getModels($slave);

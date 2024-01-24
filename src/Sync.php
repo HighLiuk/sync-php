@@ -17,45 +17,21 @@ use HighLiuk\Sync\Interfaces\SyncSource;
 class Sync
 {
     /**
-     * Master source.
-     *
-     * @var ReadableSource<ID,TModel,TContents>
-     */
-    protected $master;
-
-    /**
-     * Slave source.
-     *
-     * @var SyncSource<ID,TModel,TContents>
-     */
-    protected $slave;
-
-    /**
      * Util object for getting WRITE, UPDATE, and DELETE models.
      *
      * @var SyncUtils<ID,TModel,TContents>
      */
-    protected $utils;
+    public readonly SyncUtils $utils;
 
     /**
      * @param ReadableSource<ID,TModel,TContents> $master
      * @param SyncSource<ID,TModel,TContents> $slave
      */
-    public function __construct(ReadableSource $master, SyncSource $slave)
-    {
-        $this->master = $master;
-        $this->slave  = $slave;
+    public function __construct(
+        protected ReadableSource $master,
+        protected SyncSource $slave
+    ) {
         $this->utils  = new SyncUtils($master, $slave);
-    }
-
-    /**
-     * Get Utils helper object used for getting WRITE, UPDATE, and DELETE models.
-     *
-     * @return SyncUtils<ID,TModel,TContents>
-     */
-    public function getUtils(): SyncUtils
-    {
-        return $this->utils;
     }
 
     /**
