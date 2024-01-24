@@ -1,4 +1,19 @@
 {
+    "name": "highliuk/sync",
+    "description": "A library to facilitate the synchronization of data between multiple sources, inspired by Flysystem Sync",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "sync",
+        "synchronization"
+    ],
+    "authors": [
+        {
+            "name": "Luca Di Fazio",
+            "email": "highliuk@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "HighLiuk\\Sync\\": "src/",
