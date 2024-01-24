@@ -2,7 +2,7 @@
 
 namespace HighLiuk\Sync;
 
-use Exception;
+use HighLiuk\Sync\Exceptions\ModelNotFoundException;
 use HighLiuk\Sync\Interfaces\SyncModel;
 use HighLiuk\Sync\Interfaces\ReadableSource;
 use HighLiuk\Sync\Interfaces\SyncSource;
@@ -117,13 +117,14 @@ class Sync
      * Write the given model to the slave.
      *
      * @param TModel $model
+     * @throws ModelNotFoundException
      */
     protected function put(SyncModel $model): void
     {
         $contents = $this->master->get($model->getId());
 
         if ($contents === null) {
-            throw new Exception();
+            throw new ModelNotFoundException($model);
         }
 
         $this->slave->put($model->getId(), $contents);
