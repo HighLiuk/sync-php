@@ -17,6 +17,7 @@
     "autoload": {
         "psr-4": {
             "HighLiuk\\Sync\\": "src/",
+            "HighLiuk\\Sync\\Examples\\": "examples/",
             "HighLiuk\\Sync\\Tests\\": "tests/"
         }
     },
