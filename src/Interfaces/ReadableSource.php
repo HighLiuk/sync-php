@@ -10,7 +10,7 @@ namespace HighLiuk\Sync\Interfaces;
 interface ReadableSource
 {
     /**
-     * Read the model with the given ID.
+     * Read the model contents with the given ID.
      *
      * @param ID $id
      * @return ?TContents

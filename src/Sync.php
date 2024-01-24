@@ -12,7 +12,7 @@ use HighLiuk\Sync\Interfaces\SyncSource;
  *
  * @template ID of string|int
  * @template TModel of SyncModel<ID>
- * @template TContents = TModel
+ * @template TContents
  */
 class Sync
 {

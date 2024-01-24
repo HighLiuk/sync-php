@@ -10,7 +10,7 @@ namespace HighLiuk\Sync\Interfaces;
 interface WritableSource
 {
     /**
-     * Write the given model to the source.
+     * Write the given model contents to the source.
      *
      * @param ID $id
      * @param TContents $contents
