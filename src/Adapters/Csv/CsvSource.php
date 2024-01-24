@@ -31,7 +31,7 @@ class CsvSource extends CsvReadableSource implements SyncSource
     /**
      * Save the items to the source.
      *
-     * @param array<string,array<string,string>> $items
+     * @param  array<string,array<string,string>>  $items
      */
     protected function save(array $items): void
     {
@@ -56,7 +56,7 @@ class CsvSource extends CsvReadableSource implements SyncSource
     /**
      * Put the models to the source. Update if exists, create if not.
      *
-     * @param SyncModel[] $models
+     * @param  SyncModel[]  $models
      */
     protected function put(array $models): void
     {
@@ -72,7 +72,7 @@ class CsvSource extends CsvReadableSource implements SyncSource
     /**
      * Map the item to the fields.
      *
-     * @param array<string,string> $item
+     * @param  array<string,string>  $item
      * @return string[]
      */
     protected function itemToFields(array $item): array

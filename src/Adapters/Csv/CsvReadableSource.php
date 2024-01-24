@@ -69,7 +69,7 @@ class CsvReadableSource implements ReadableSource
     /**
      * Index the items by ID.
      *
-     * @param array<string,string>[] $items
+     * @param  array<string,string>[]  $items
      * @return array<string,array<string,string>>
      */
     protected function keyById(array $items): array
@@ -86,7 +86,7 @@ class CsvReadableSource implements ReadableSource
     /**
      * Map the item to its ID.
      *
-     * @param array<string,string> $item
+     * @param  array<string,string>  $item
      */
     protected function getItemId(array $item): string
     {
@@ -106,7 +106,7 @@ class CsvReadableSource implements ReadableSource
     /**
      * Map the fields to the item.
      *
-     * @param string[] $fields
+     * @param  string[]  $fields
      * @return array<string,string>
      */
     protected function fieldsToItem(array $fields): array

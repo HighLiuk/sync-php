@@ -9,7 +9,7 @@ interface ReadableSource
     /**
      * Get the models with the given ids.
      *
-     * @param string[] $ids
+     * @param  string[]  $ids
      * @return SyncModel[]
      */
     public function get(array $ids): array;

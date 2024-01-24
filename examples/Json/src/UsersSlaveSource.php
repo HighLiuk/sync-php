@@ -8,7 +8,7 @@ class UsersSlaveSource extends JsonSource
 {
     public function __construct()
     {
-        parent::__construct(dirname(__DIR__) . '/data/slave.json');
+        parent::__construct(dirname(__DIR__).'/data/slave.json');
     }
 
     protected function jsonToItems(array $json): array

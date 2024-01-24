@@ -8,6 +8,6 @@ class UsersMasterSource extends JsonReadableSource
 {
     public function __construct()
     {
-        parent::__construct(dirname(__DIR__) . '/data/master.json');
+        parent::__construct(dirname(__DIR__).'/data/master.json');
     }
 }

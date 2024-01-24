@@ -8,8 +8,8 @@ namespace HighLiuk\Sync;
 class SyncModel
 {
     /**
-     * @param string $id The model's id.
-     * @param array<string,mixed> $item The model's data.
+     * @param  string  $id  The model's id.
+     * @param  array<string,mixed>  $item  The model's data.
      */
     public function __construct(
         public readonly string $id,

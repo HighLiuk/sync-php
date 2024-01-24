@@ -8,6 +8,6 @@ class UsersSlaveSource extends CsvSource
 {
     public function __construct()
     {
-        parent::__construct(dirname(__DIR__) . '/data/slave.csv');
+        parent::__construct(dirname(__DIR__).'/data/slave.csv');
     }
 }

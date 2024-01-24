@@ -36,7 +36,7 @@ class JsonReadableSource implements ReadableSource
         $contents = file_get_contents($this->path) ?: '';
         $json = json_decode($contents, true);
 
-        if (!is_array($json)) {
+        if (! is_array($json)) {
             return [];
         }
 
@@ -48,7 +48,7 @@ class JsonReadableSource implements ReadableSource
     /**
      * Index the items by ID.
      *
-     * @param array<string,mixed>[] $items
+     * @param  array<string,mixed>[]  $items
      * @return array<string,array<string,mixed>>
      */
     protected function keyById(array $items): array
@@ -65,7 +65,7 @@ class JsonReadableSource implements ReadableSource
     /**
      * Map the item to its ID.
      *
-     * @param array<string,mixed> $item
+     * @param  array<string,mixed>  $item
      */
     protected function getItemId(array $item): string
     {
@@ -75,7 +75,7 @@ class JsonReadableSource implements ReadableSource
     /**
      * Map the json content to the items.
      *
-     * @param array<array-key,mixed> $json
+     * @param  array<array-key,mixed>  $json
      * @return array<string,mixed>[]
      */
     protected function jsonToItems(array $json): array

@@ -31,7 +31,7 @@ class JsonSource extends JsonReadableSource implements SyncSource
     /**
      * Save the items to the source.
      *
-     * @param array<string,array<string,mixed>> $items
+     * @param  array<string,array<string,mixed>>  $items
      */
     protected function save(array $items): void
     {
@@ -44,7 +44,7 @@ class JsonSource extends JsonReadableSource implements SyncSource
     /**
      * Put the models to the source. Update if exists, create if not.
      *
-     * @param SyncModel[] $models
+     * @param  SyncModel[]  $models
      */
     protected function put(array $models): void
     {
@@ -60,7 +60,7 @@ class JsonSource extends JsonReadableSource implements SyncSource
     /**
      * Map the items to the json content.
      *
-     * @param array<string,mixed>[] $items
+     * @param  array<string,mixed>[]  $items
      * @return array<array-key,mixed>
      */
     protected function itemsToJson(array $items): array
