@@ -2,36 +2,53 @@
 
 namespace HighLiuk\Sync;
 
-use HighLiuk\Sync\Exceptions\ModelNotFoundException;
-use HighLiuk\Sync\Interfaces\SyncModel;
 use HighLiuk\Sync\Interfaces\ReadableSource;
 use HighLiuk\Sync\Interfaces\SyncSource;
 
 /**
- * Syncs two SyncSources.
- *
- * @template ID of string|int
- * @template TModel of SyncModel<ID>
- * @template TContents
+ * Syncs two sources.
  */
 class Sync
 {
     /**
-     * Util object for getting WRITE, UPDATE, and DELETE models.
+     * Models to write (on MASTER but NOT SLAVE).
      *
-     * @var SyncUtils<ID,TModel,TContents>
+     * @var SyncModel[]
      */
-    public readonly SyncUtils $utils;
+    public readonly array $writes;
 
     /**
-     * @param ReadableSource<ID,TModel,TContents> $master
-     * @param SyncSource<ID,TModel,TContents> $slave
+     * Models to update (on SLAVE and MASTER).
+     *
+     * @var SyncModel[]
+     */
+    public readonly array $updates;
+
+    /**
+     * Model ids to delete (on SLAVE but NOT MASTER).
+     *
+     * @var string[]
+     */
+    public readonly array $deletes;
+
+    /**
+     * Create a new Sync object.
      */
     public function __construct(
         protected ReadableSource $master,
         protected SyncSource $slave
     ) {
-        $this->utils  = new SyncUtils($master, $slave);
+        $master_ids = $master->list();
+        $slave_ids = $slave->list();
+
+        // Write: on Master, not Slave
+        $this->writes = $master->get(array_diff($master_ids, $slave_ids));
+
+        // Update: On both and different properties
+        $this->updates = $master->get(array_intersect($master_ids, $slave_ids));
+
+        // Delete: not on Master, on Slave
+        $this->deletes = array_diff($slave_ids, $master_ids);
     }
 
     /**
@@ -41,9 +58,7 @@ class Sync
      */
     public function syncWrites(): Sync
     {
-        foreach ($this->utils->getWrites() as $model) {
-            $this->put($model);
-        }
+        $this->slave->create($this->writes);
 
         return $this;
     }
@@ -55,9 +70,7 @@ class Sync
      */
     public function syncUpdates(): Sync
     {
-        foreach ($this->utils->getUpdates() as $model) {
-            $this->put($model);
-        }
+        $this->slave->update($this->updates);
 
         return $this;
     }
@@ -69,15 +82,13 @@ class Sync
      */
     public function syncDeletes(): Sync
     {
-        foreach ($this->utils->getDeletes() as $model) {
-            $this->slave->delete($model->getId());
-        }
+        $this->slave->delete($this->deletes);
 
         return $this;
     }
 
     /**
-     * Call $this->syncWrites(), $this->syncUpdates(), and $this->syncDeletes()
+     * Sync any writes, updates, and deletes.
      *
      * @return $this
      */
@@ -87,22 +98,5 @@ class Sync
             ->syncWrites()
             ->syncUpdates()
             ->syncDeletes();
-    }
-
-    /**
-     * Write the given model to the slave.
-     *
-     * @param TModel $model
-     * @throws ModelNotFoundException
-     */
-    protected function put(SyncModel $model): void
-    {
-        $contents = $this->master->get($model->getId());
-
-        if ($contents === null) {
-            throw new ModelNotFoundException($model);
-        }
-
-        $this->slave->put($model->getId(), $contents);
     }
 }

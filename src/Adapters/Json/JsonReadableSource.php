@@ -3,94 +3,85 @@
 namespace HighLiuk\Sync\Adapters\Json;
 
 use HighLiuk\Sync\Interfaces\ReadableSource;
+use HighLiuk\Sync\SyncModel;
 
-/**
- * @implements ReadableSource<ID,TModel,array<string,mixed>>
- * @template ID of string|int
- * @template TModel of JsonModel<ID>
- */
-abstract class JsonReadableSource implements ReadableSource
+class JsonReadableSource implements ReadableSource
 {
-    /**
-     * The content of the JSON source.
-     *
-     * @var array<array-key,mixed>
-     */
-    protected array $content;
-
-    /**
-     * The data of the JSON source.
-     *
-     * @var array<string,mixed>[]
-     */
-    protected array $data;
-
-    /**
-     * The ID field of the JSON source.
-     */
-    protected readonly string $idField;
-
     public function __construct(public readonly string $path)
     {
-        $contents = file_get_contents($path);
-        assert($contents);
-
-        $content = json_decode($contents, true);
-        assert(is_array($content));
-        $this->content = $content;
-
-        $model = $this->model();
-        $idField = $model::getIdField();
-        $this->idField = $idField;
-
-        $data = &$this->selectData($this->content);
-        assert(array_is_list($data));
-        foreach ($data as $item) {
-            assert(is_array($item));
-            assert(array_key_exists($idField, $item));
-        }
-
-        $this->data = &$data;
     }
 
-    public function get($id)
+    public function get(array $ids): array
     {
-        $idField = $this->idField;
-
-        foreach ($this->data as $item) {
-            if ($item[$idField] == $id) {
-                return $item;
-            }
-        }
-
-        return null;
-    }
-
-    public function list(): iterable
-    {
-        $model = $this->model();
+        $items = $this->load();
 
         return array_map(
-            fn (array $item) => new $model($item),
-            $this->data
+            fn (string $id) => new SyncModel($id, $items[$id]),
+            $ids
         );
     }
 
-    /**
-     * Get the class name of the model.
-     *
-     * @return class-string<TModel>
-     */
-    abstract protected function model(): string;
+    public function list(): array
+    {
+        return array_keys($this->load());
+    }
 
     /**
-     * Select the data from the source.
+     * Load the items from the source and return them indexed by ID.
      *
-     * @param array<array-key,mixed> $content
+     * @return array<string,array<string,mixed>>
+     */
+    protected function load(): array
+    {
+        $contents = file_get_contents($this->path) ?: '';
+        $json = json_decode($contents, true);
+
+        if (!is_array($json)) {
+            return [];
+        }
+
+        $items = $this->jsonToItems($json);
+
+        return $this->keyById($items);
+    }
+
+    /**
+     * Index the items by ID.
+     *
+     * @param array<string,mixed>[] $items
+     * @return array<string,array<string,mixed>>
+     */
+    protected function keyById(array $items): array
+    {
+        $return = [];
+
+        foreach ($items as $item) {
+            $return[$this->getItemId($item)] = $item;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Map the item to its ID.
+     *
+     * @param array<string,mixed> $item
+     */
+    protected function getItemId(array $item): string
+    {
+        return (string) ($item['id'] ?? null);
+    }
+
+    /**
+     * Map the json content to the items.
+     *
+     * @param array<array-key,mixed> $json
      * @return array<string,mixed>[]
      */
-    protected function &selectData(array &$content): array
+    protected function jsonToItems(array $json): array
     {
-        return $content;
+        assert(array_is_list($json));
+
+        return $json;
     }
 }

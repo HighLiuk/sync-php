@@ -2,25 +2,22 @@
 
 namespace HighLiuk\Sync\Interfaces;
 
-/**
- * @template ID of string|int
- * @template TModel of SyncModel<ID>
- * @template TContents
- */
+use HighLiuk\Sync\SyncModel;
+
 interface ReadableSource
 {
     /**
-     * Read the model contents with the given ID.
+     * Get the models with the given ids.
      *
-     * @param ID $id
-     * @return ?TContents
+     * @param string[] $ids
+     * @return SyncModel[]
      */
-    public function get($id);
+    public function get(array $ids): array;
 
     /**
-     * List all models.
+     * Get all model ids.
      *
-     * @return iterable<int,TModel>
+     * @return string[]
      */
-    public function list(): iterable;
+    public function list(): array;
 }

@@ -3,86 +3,118 @@
 namespace HighLiuk\Sync\Adapters\Csv;
 
 use HighLiuk\Sync\Interfaces\ReadableSource;
+use HighLiuk\Sync\SyncModel;
+use Throwable;
 
-/**
- * @implements ReadableSource<string,TModel,array<string,string>>>
- * @template TModel of CsvModel
- */
-abstract class CsvReadableSource implements ReadableSource
+class CsvReadableSource implements ReadableSource
 {
-    /**
-     * The data of the CSV source.
-     *
-     * @var array<string,string>[]
-     */
-    protected array $data;
-
     /**
      * The headers of the CSV source.
      *
      * @var string[]
      */
-    protected array $headers;
-
-    /**
-     * The ID field of the CSV source.
-     */
-    protected readonly string $idField;
+    protected array $headers = [];
 
     public function __construct(public readonly string $path)
     {
-        $handle = fopen($path, 'r');
-        assert($handle !== false);
+    }
 
-        $model = $this->model();
-        $idField = $model::getIdField();
-        $this->idField = $idField;
+    public function get(array $ids): array
+    {
+        $items = $this->load();
+
+        return array_map(
+            fn (string $id) => new SyncModel($id, $items[$id]),
+            $ids
+        );
+    }
+
+    public function list(): array
+    {
+        return array_keys($this->load());
+    }
+
+    /**
+     * Load the items from the source and return them indexed by ID.
+     *
+     * @return array<string,array<string,string>>
+     */
+    protected function load(): array
+    {
+        $handle = fopen($this->path, 'r');
+
+        if ($handle === false) {
+            return [];
+        }
 
         $headers = fgetcsv($handle);
         assert(is_array($headers));
-        assert(in_array($idField, $headers));
         $this->headers = $headers;
+        $headers = $this->getHeaders();
 
-        $data = [];
+        $items = [];
         while (is_array($row = fgetcsv($handle))) {
-            $item = array_combine($headers, $row);
-            assert(is_array($item));
-
-            $data[] = $item;
+            try {
+                $items[] = $this->fieldsToItem($row);
+            } catch (Throwable) {
+                // Ignore the row.
+            }
         }
 
         fclose($handle);
 
-        $this->data = $data;
-    }
-
-    public function get($id)
-    {
-        $idField = $this->idField;
-
-        foreach ($this->data as $item) {
-            if ($item[$idField] == $id) {
-                return $item;
-            }
-        }
-
-        return null;
-    }
-
-    public function list(): iterable
-    {
-        $model = $this->model();
-
-        return array_map(
-            fn (array $item) => new $model($item),
-            $this->data
-        );
+        return $this->keyById($items);
     }
 
     /**
-     * Get the class name of the model.
+     * Index the items by ID.
      *
-     * @return class-string<TModel>
+     * @param array<string,string>[] $items
+     * @return array<string,array<string,string>>
      */
-    abstract protected function model(): string;
+    protected function keyById(array $items): array
+    {
+        $return = [];
+
+        foreach ($items as $item) {
+            $return[$this->getItemId($item)] = $item;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Map the item to its ID.
+     *
+     * @param array<string,string> $item
+     */
+    protected function getItemId(array $item): string
+    {
+        return (string) ($item['id'] ?? null);
+    }
+
+    /**
+     * Get the headers of the CSV file.
+     *
+     * @return string[]
+     */
+    protected function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Map the fields to the item.
+     *
+     * @param string[] $fields
+     * @return array<string,string>
+     */
+    protected function fieldsToItem(array $fields): array
+    {
+        $item = array_combine($this->getHeaders(), $fields);
+
+        assert(is_array($item));
+
+        return $item;
+    }
 }

@@ -3,59 +3,68 @@
 namespace HighLiuk\Sync\Adapters\Json;
 
 use HighLiuk\Sync\Interfaces\SyncSource;
+use HighLiuk\Sync\SyncModel;
 
-/**
- * @extends JsonReadableSource<ID,TModel>
- * @implements SyncSource<ID,TModel,array<string,mixed>>
- * @template ID of string|int
- * @template TModel of JsonModel<ID>
- */
-abstract class JsonSource extends JsonReadableSource implements SyncSource
+class JsonSource extends JsonReadableSource implements SyncSource
 {
-    public function put($id, $contents): void
+    public function create(array $models): void
     {
-        $idField = $this->idField;
-
-        // Find the model by ID in the data array.
-        foreach ($this->data as &$item) {
-            if ($item[$idField] == $id) {
-                // Replace the model with the new contents.
-                $item = $contents;
-
-                // Save the data array to the file.
-                $this->save();
-                return;
-            }
-        }
-
-        // If the model was not found, add it to the data array.
-        $this->data[] = $contents;
-        $this->save();
+        $this->put($models);
     }
 
-    public function delete($id): void
+    public function update(array $models): void
     {
-        $idField = $this->idField;
+        $this->put($models);
+    }
 
-        // Find the model by ID in the data array.
-        foreach ($this->data as $key => $item) {
-            if ($item[$idField] == $id) {
-                // Remove the model from the data array.
-                unset($this->data[$key]);
-                $this->data = array_values($this->data);
+    public function delete(array $ids): void
+    {
+        $items = $this->load();
 
-                // Save the data array to the file.
-                $this->save();
-                return;
-            }
+        foreach ($ids as $id) {
+            unset($items[$id]);
         }
+
+        $this->save($items);
     }
 
     /**
-     * Save the data to the source.
+     * Save the items to the source.
+     *
+     * @param array<string,array<string,mixed>> $items
      */
-    protected function save(): void
+    protected function save(array $items): void
     {
-        file_put_contents($this->path, json_encode($this->content));
+        $json = $this->itemsToJson(array_values($items));
+        $contents = json_encode($json);
+
+        file_put_contents($this->path, $contents);
+    }
+
+    /**
+     * Put the models to the source. Update if exists, create if not.
+     *
+     * @param SyncModel[] $models
+     */
+    protected function put(array $models): void
+    {
+        $items = $this->load();
+
+        foreach ($models as $model) {
+            $items[$model->id] = $model->item;
+        }
+
+        $this->save($items);
+    }
+
+    /**
+     * Map the items to the json content.
+     *
+     * @param array<string,mixed>[] $items
+     * @return array<array-key,mixed>
+     */
+    protected function itemsToJson(array $items): array
+    {
+        return $items;
     }
 }

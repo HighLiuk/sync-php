@@ -2,25 +2,28 @@
 
 namespace HighLiuk\Sync\Interfaces;
 
-/**
- * @template ID of string|int
- * @template TModel of SyncModel<ID>
- * @template TContents
- */
+use HighLiuk\Sync\SyncModel;
+
 interface WritableSource
 {
     /**
-     * Write the given model contents to the source.
+     * Add the given models to the source.
      *
-     * @param ID $id
-     * @param TContents $contents
+     * @param SyncModel[] $models
      */
-    public function put($id, $contents): void;
+    public function create(array $models): void;
 
     /**
-     * Delete the model with the given ID.
+     * Update the given models in the source.
      *
-     * @param ID $id
+     * @param SyncModel[] $models
      */
-    public function delete($id): void;
+    public function update(array $models): void;
+
+    /**
+     * Delete the models with the given ids from the source.
+     *
+     * @param string[] $ids
+     */
+    public function delete(array $ids): void;
 }

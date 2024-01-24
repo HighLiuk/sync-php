@@ -3,69 +3,80 @@
 namespace HighLiuk\Sync\Adapters\Csv;
 
 use HighLiuk\Sync\Interfaces\SyncSource;
+use HighLiuk\Sync\SyncModel;
 
-/**
- * @extends CsvReadableSource<TModel>
- * @implements SyncSource<string,TModel,array<string,string>>
- * @template TModel of CsvModel
- */
-abstract class CsvSource extends CsvReadableSource implements SyncSource
+class CsvSource extends CsvReadableSource implements SyncSource
 {
-    public function put($id, $contents): void
+    public function create(array $models): void
     {
-        $idField = $this->idField;
-
-        // Find the model by ID in the data array.
-        foreach ($this->data as &$item) {
-            if ($item[$idField] === $id) {
-                // Replace the model with the new contents.
-                $item = $contents;
-
-                // Save the data array to the file.
-                $this->save();
-                return;
-            }
-        }
-
-        // If the model was not found, add it to the data array.
-        $this->data[] = $contents;
-        $this->save();
+        $this->put($models);
     }
 
-    public function delete($id): void
+    public function update(array $models): void
     {
-        $idField = $this->idField;
+        $this->put($models);
+    }
 
-        // Find the model by ID in the data array.
-        foreach ($this->data as $key => $item) {
-            if ($item[$idField] === $id) {
-                // Remove the model from the data array.
-                unset($this->data[$key]);
-                $this->data = array_values($this->data);
+    public function delete(array $ids): void
+    {
+        $items = $this->load();
 
-                // Save the data array to the file.
-                $this->save();
-                return;
-            }
+        foreach ($ids as $id) {
+            unset($items[$id]);
         }
+
+        $this->save($items);
     }
 
     /**
-     * Save the data to the source.
+     * Save the items to the source.
+     *
+     * @param array<string,array<string,string>> $items
      */
-    protected function save(): void
+    protected function save(array $items): void
     {
         $handle = fopen($this->path, 'w');
         assert($handle !== false);
 
-        // Write the header row.
-        fputcsv($handle, $this->headers);
+        // Write the header.
+        $headers = $this->getHeaders();
+        $headers_count = count($headers);
+        fputcsv($handle, $headers);
 
-        // Write the data rows.
-        foreach ($this->data as $item) {
-            fputcsv($handle, array_values($item));
+        // Write the rows.
+        foreach ($items as $item) {
+            if (count($item) === $headers_count) {
+                fputcsv($handle, $this->itemToFields($item));
+            }
         }
 
         fclose($handle);
+    }
+
+    /**
+     * Put the models to the source. Update if exists, create if not.
+     *
+     * @param SyncModel[] $models
+     */
+    protected function put(array $models): void
+    {
+        $items = $this->load();
+
+        foreach ($models as $model) {
+            $items[$model->id] = $model->item;
+        }
+
+        $this->save($items);
+    }
+
+    /**
+     * Map the item to the fields.
+     *
+     * @param array<string,string> $item
+     * @return string[]
+     */
+    protected function itemToFields(array $item): array
+    {
+        return array_values($item);
     }
 }

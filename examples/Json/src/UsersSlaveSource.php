@@ -4,9 +4,6 @@ namespace HighLiuk\Sync\Examples\Json\Src;
 
 use HighLiuk\Sync\Adapters\Json\JsonSource;
 
-/**
- * @extends JsonSource<int,User>
- */
 class UsersSlaveSource extends JsonSource
 {
     public function __construct()
@@ -14,20 +11,23 @@ class UsersSlaveSource extends JsonSource
         parent::__construct(dirname(__DIR__) . '/data/slave.json');
     }
 
-    protected function model(): string
+    protected function jsonToItems(array $json): array
     {
-        return User::class;
+        $items = $json['data']['users'] ?? [];
+
+        assert(is_array($items));
+        assert(array_is_list($items));
+
+        return $items;
     }
 
-    protected function &selectData(array &$content): array
+    protected function itemsToJson(array $items): array
     {
-        return $content['data']['users'];
-    }
-
-    protected function save(): void
-    {
-        $this->content['count'] = count($this->data);
-
-        parent::save();
+        return [
+            'data' => [
+                'users' => $items,
+            ],
+            'count' => count($items),
+        ];
     }
 }
