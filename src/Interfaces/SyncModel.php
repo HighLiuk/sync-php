@@ -17,7 +17,7 @@ interface SyncModel
     /**
      * Check if this model is the same as another.
      *
-     * @param SyncModel<ID> $other
+     * @param static<ID> $other
      */
-    public function isSame(SyncModel $other): bool;
+    public function isSame($other): bool;
 }

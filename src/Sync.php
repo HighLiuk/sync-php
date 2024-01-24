@@ -2,6 +2,7 @@
 
 namespace HighLiuk\Sync;
 
+use Exception;
 use HighLiuk\Sync\Interfaces\SyncModel;
 use HighLiuk\Sync\Interfaces\ReadableSource;
 use HighLiuk\Sync\Interfaces\SyncSource;
@@ -120,6 +121,10 @@ class Sync
     protected function put(SyncModel $model): void
     {
         $contents = $this->master->get($model->getId());
+
+        if ($contents === null) {
+            throw new Exception();
+        }
 
         $this->slave->put($model->getId(), $contents);
     }
