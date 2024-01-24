@@ -18,7 +18,7 @@ class JsonModel implements SyncModel
     public readonly string|int $id;
 
     /**
-     * Create a new User instance.
+     * Create a new JSON model instance.
      *
      * @param array<string,mixed> $data
      */
