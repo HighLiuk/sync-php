@@ -56,7 +56,7 @@ class Sync
      *
      * @return $this
      */
-    public function syncWrites(): Sync
+    public function syncWrites(): static
     {
         $this->slave->create($this->writes);
 
@@ -68,7 +68,7 @@ class Sync
      *
      * @return $this
      */
-    public function syncUpdates(): Sync
+    public function syncUpdates(): static
     {
         $this->slave->update($this->updates);
 
@@ -80,7 +80,7 @@ class Sync
      *
      * @return $this
      */
-    public function syncDeletes(): Sync
+    public function syncDeletes(): static
     {
         $this->slave->delete($this->deletes);
 
@@ -92,7 +92,7 @@ class Sync
      *
      * @return $this
      */
-    public function sync(): Sync
+    public function sync(): static
     {
         return $this
             ->syncWrites()
