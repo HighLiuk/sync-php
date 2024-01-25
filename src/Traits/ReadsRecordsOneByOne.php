@@ -7,9 +7,11 @@ use HighLiuk\Sync\SyncModel;
 trait ReadsRecordsOneByOne
 {
     /**
-     * Get the model with the given id.
+     * Get the item with the given id.
+     *
+     * @return ?array<string,mixed>
      */
-    abstract public function getOne(string $id): ?SyncModel;
+    abstract public function getOne(string $id): ?array;
 
     /**
      * Get the models with the given ids.
@@ -19,8 +21,14 @@ trait ReadsRecordsOneByOne
      */
     public function get(array $ids): array
     {
-        $models = array_map($this->getOne(...), $ids);
+        $models = [];
 
-        return array_values(array_filter($models));
+        foreach ($ids as $id) {
+            if ($item = $this->getOne($id)) {
+                $models[] = new SyncModel($id, $item);
+            }
+        }
+
+        return $models;
     }
 }
