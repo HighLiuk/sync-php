@@ -2,14 +2,18 @@
 
 namespace HighLiuk\Sync\Adapters\Json;
 
-use HighLiuk\Sync\Interfaces\SaverSource;
 use HighLiuk\Sync\Interfaces\WritableSource;
 use HighLiuk\Sync\Traits\WritesRecordsFromMemory;
 
-class JsonSource extends JsonReadableSource implements SaverSource, WritableSource
+class JsonSource extends JsonReadableSource implements WritableSource
 {
     use WritesRecordsFromMemory;
 
+    /**
+     * Save the items to the source.
+     *
+     * @param  array<string,array<string,mixed>>  $items
+     */
     public function save(array $items): void
     {
         $json = $this->itemsToJson(array_values($items));

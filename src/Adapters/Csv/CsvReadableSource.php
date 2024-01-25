@@ -2,12 +2,11 @@
 
 namespace HighLiuk\Sync\Adapters\Csv;
 
-use HighLiuk\Sync\Interfaces\LoaderSource;
 use HighLiuk\Sync\Interfaces\ReadableSource;
 use HighLiuk\Sync\Traits\ReadsRecordsFromMemory;
 use Throwable;
 
-class CsvReadableSource implements LoaderSource, ReadableSource
+class CsvReadableSource implements ReadableSource
 {
     use ReadsRecordsFromMemory;
 
@@ -22,6 +21,11 @@ class CsvReadableSource implements LoaderSource, ReadableSource
     {
     }
 
+    /**
+     * Load the items from the source.
+     *
+     * @return array<string,mixed>[]
+     */
     public function load(): array
     {
         $handle = fopen($this->path, 'r');

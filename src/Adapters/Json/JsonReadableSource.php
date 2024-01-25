@@ -2,11 +2,10 @@
 
 namespace HighLiuk\Sync\Adapters\Json;
 
-use HighLiuk\Sync\Interfaces\LoaderSource;
 use HighLiuk\Sync\Interfaces\ReadableSource;
 use HighLiuk\Sync\Traits\ReadsRecordsFromMemory;
 
-class JsonReadableSource implements LoaderSource, ReadableSource
+class JsonReadableSource implements ReadableSource
 {
     use ReadsRecordsFromMemory;
 
@@ -14,6 +13,11 @@ class JsonReadableSource implements LoaderSource, ReadableSource
     {
     }
 
+    /**
+     * Load the items from the source.
+     *
+     * @return array<string,mixed>[]
+     */
     public function load(): array
     {
         $contents = file_get_contents($this->path) ?: '';

@@ -2,15 +2,19 @@
 
 namespace HighLiuk\Sync\Adapters\Csv;
 
-use HighLiuk\Sync\Interfaces\SaverSource;
 use HighLiuk\Sync\Interfaces\WritableSource;
 use HighLiuk\Sync\Traits\WritesRecordsFromMemory;
 use HighLiuk\Sync\Utils;
 
-class CsvSource extends CsvReadableSource implements SaverSource, WritableSource
+class CsvSource extends CsvReadableSource implements WritableSource
 {
     use WritesRecordsFromMemory;
 
+    /**
+     * Save the items to the source.
+     *
+     * @param  array<string,array<string,mixed>>  $items
+     */
     public function save(array $items): void
     {
         $handle = fopen($this->path, 'w');
