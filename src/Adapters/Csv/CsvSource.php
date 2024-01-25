@@ -5,6 +5,7 @@ namespace HighLiuk\Sync\Adapters\Csv;
 use HighLiuk\Sync\Interfaces\SaverSource;
 use HighLiuk\Sync\Interfaces\WritableSource;
 use HighLiuk\Sync\Traits\WritesRecordsFromMemory;
+use HighLiuk\Sync\Utils;
 
 class CsvSource extends CsvReadableSource implements SaverSource, WritableSource
 {
@@ -33,11 +34,11 @@ class CsvSource extends CsvReadableSource implements SaverSource, WritableSource
     /**
      * Map the item to the fields.
      *
-     * @param  array<string,string>  $item
+     * @param  array<string,mixed>  $item
      * @return string[]
      */
     protected function itemToFields(array $item): array
     {
-        return array_values($item);
+        return array_map(Utils::toString(...), $item);
     }
 }

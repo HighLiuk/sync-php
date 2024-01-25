@@ -3,6 +3,7 @@
 namespace HighLiuk\Sync\Traits;
 
 use HighLiuk\Sync\SyncModel;
+use HighLiuk\Sync\Utils;
 
 trait ReadsRecordsFromMemory
 {
@@ -55,6 +56,6 @@ trait ReadsRecordsFromMemory
      */
     protected function getItemId(array $item): string
     {
-        return (string) ($item['id'] ?? null);
+        return Utils::toString($item['id'] ?? null);
     }
 }

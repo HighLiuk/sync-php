@@ -13,7 +13,10 @@ class UsersSlaveSource extends JsonSource
 
     protected function jsonToItems(array $json): array
     {
-        $items = $json['data']['users'] ?? [];
+        $data = $json['data'] ?? [];
+        assert(is_array($data));
+
+        $items = $data['users'] ?? [];
 
         assert(is_array($items));
         assert(array_is_list($items));
