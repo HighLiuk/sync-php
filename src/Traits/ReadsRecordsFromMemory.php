@@ -7,6 +7,19 @@ use HighLiuk\Sync\Utils;
 
 trait ReadsRecordsFromMemory
 {
+    /**
+     * Load the items from the source.
+     *
+     * @return array<string,mixed>[]
+     */
+    abstract public function load(): array;
+
+    /**
+     * Get the models with the given ids.
+     *
+     * @param  string[]  $ids
+     * @return SyncModel[]
+     */
     public function get(array $ids): array
     {
         $items = $this->loadIndexed();
@@ -17,6 +30,11 @@ trait ReadsRecordsFromMemory
         );
     }
 
+    /**
+     * Get all model ids.
+     *
+     * @return string[]
+     */
     public function list(): array
     {
         return array_map($this->getItemId(...), $this->load());
