@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Examples\\Csv\\": "Csv/src/",
+            "Examples\\Json\\": "Json/src/"
+        }
+    },
+    "require": {
+        "highliuk/sync": "^1.3"
+    }
+}

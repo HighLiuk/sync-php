@@ -1,10 +1,10 @@
 <?php
 
-use HighLiuk\Sync\Examples\Csv\Src\UsersSlaveSource;
-use HighLiuk\Sync\Examples\Json\Src\UsersMasterSource;
+use Examples\Csv\UsersSlaveSource;
+use Examples\Json\UsersMasterSource;
 use HighLiuk\Sync\Sync;
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 $master = new UsersMasterSource();
 $slave = new UsersSlaveSource();

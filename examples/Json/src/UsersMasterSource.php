@@ -1,6 +1,6 @@
 <?php
 
-namespace HighLiuk\Sync\Examples\Json\Src;
+namespace Examples\Json;
 
 use HighLiuk\Sync\Adapters\Json\JsonReadableSource;
 

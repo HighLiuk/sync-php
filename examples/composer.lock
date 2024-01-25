@@ -1,0 +1,68 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "65ec6656861ee391536d2b83695e3058",
+    "packages": [
+        {
+            "name": "highliuk/sync",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/HighLiuk/sync-php.git",
+                "reference": "16cc304035495e0ea3501f3cab2fadbd82d92a5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/HighLiuk/sync-php/zipball/16cc304035495e0ea3501f3cab2fadbd82d92a5f",
+                "reference": "16cc304035495e0ea3501f3cab2fadbd82d92a5f",
+                "shasum": ""
+            },
+            "require-dev": {
+                "laravel/pint": "^1.13",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HighLiuk\\Sync\\": "src/",
+                    "HighLiuk\\Sync\\Tests\\": "tests/",
+                    "HighLiuk\\Sync\\Examples\\": "examples/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luca Di Fazio",
+                    "email": "highliuk@gmail.com"
+                }
+            ],
+            "description": "A library to facilitate the synchronization of data between multiple sources, inspired by Flysystem Sync",
+            "keywords": [
+                "php",
+                "sync",
+                "synchronization"
+            ],
+            "support": {
+                "issues": "https://github.com/HighLiuk/sync-php/issues",
+                "source": "https://github.com/HighLiuk/sync-php/tree/1.3.0"
+            },
+            "time": "2024-01-25T21:37:58+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}

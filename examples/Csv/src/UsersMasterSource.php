@@ -1,6 +1,6 @@
 <?php
 
-namespace HighLiuk\Sync\Examples\Csv\Src;
+namespace Examples\Csv;
 
 use HighLiuk\Sync\Adapters\Csv\CsvReadableSource;
 
