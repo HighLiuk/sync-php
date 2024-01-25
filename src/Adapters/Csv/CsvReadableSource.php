@@ -2,12 +2,15 @@
 
 namespace HighLiuk\Sync\Adapters\Csv;
 
+use HighLiuk\Sync\Interfaces\LoaderSource;
 use HighLiuk\Sync\Interfaces\ReadableSource;
-use HighLiuk\Sync\SyncModel;
+use HighLiuk\Sync\Traits\ReadsRecordsFromMemory;
 use Throwable;
 
-class CsvReadableSource implements ReadableSource
+class CsvReadableSource implements LoaderSource, ReadableSource
 {
+    use ReadsRecordsFromMemory;
+
     /**
      * The headers of the CSV source.
      *
@@ -19,27 +22,7 @@ class CsvReadableSource implements ReadableSource
     {
     }
 
-    public function get(array $ids): array
-    {
-        $items = $this->load();
-
-        return array_map(
-            fn (string $id) => new SyncModel($id, $items[$id]),
-            $ids
-        );
-    }
-
-    public function list(): array
-    {
-        return array_keys($this->load());
-    }
-
-    /**
-     * Load the items from the source and return them indexed by ID.
-     *
-     * @return array<string,array<string,string>>
-     */
-    protected function load(): array
+    public function load(): array
     {
         $handle = fopen($this->path, 'r');
 
@@ -63,34 +46,7 @@ class CsvReadableSource implements ReadableSource
 
         fclose($handle);
 
-        return $this->keyById($items);
-    }
-
-    /**
-     * Index the items by ID.
-     *
-     * @param  array<string,string>[]  $items
-     * @return array<string,array<string,string>>
-     */
-    protected function keyById(array $items): array
-    {
-        $return = [];
-
-        foreach ($items as $item) {
-            $return[$this->getItemId($item)] = $item;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Map the item to its ID.
-     *
-     * @param  array<string,string>  $item
-     */
-    protected function getItemId(array $item): string
-    {
-        return (string) ($item['id'] ?? null);
+        return $items;
     }
 
     /**

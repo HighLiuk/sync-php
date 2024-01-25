@@ -3,7 +3,7 @@
 namespace HighLiuk\Sync;
 
 use HighLiuk\Sync\Interfaces\ReadableSource;
-use HighLiuk\Sync\Interfaces\SyncSource;
+use HighLiuk\Sync\Interfaces\WritableSource;
 
 /**
  * Syncs two sources.
@@ -36,7 +36,7 @@ class Sync
      */
     public function __construct(
         protected ReadableSource $master,
-        protected SyncSource $slave
+        protected ReadableSource&WritableSource $slave
     ) {
         $master_ids = $master->list();
         $slave_ids = $slave->list();

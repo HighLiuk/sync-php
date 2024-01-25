@@ -2,38 +2,15 @@
 
 namespace HighLiuk\Sync\Adapters\Csv;
 
-use HighLiuk\Sync\Interfaces\SyncSource;
-use HighLiuk\Sync\SyncModel;
+use HighLiuk\Sync\Interfaces\SaverSource;
+use HighLiuk\Sync\Interfaces\WritableSource;
+use HighLiuk\Sync\Traits\WritesRecordsFromMemory;
 
-class CsvSource extends CsvReadableSource implements SyncSource
+class CsvSource extends CsvReadableSource implements SaverSource, WritableSource
 {
-    public function create(array $models): void
-    {
-        $this->put($models);
-    }
+    use WritesRecordsFromMemory;
 
-    public function update(array $models): void
-    {
-        $this->put($models);
-    }
-
-    public function delete(array $ids): void
-    {
-        $items = $this->load();
-
-        foreach ($ids as $id) {
-            unset($items[$id]);
-        }
-
-        $this->save($items);
-    }
-
-    /**
-     * Save the items to the source.
-     *
-     * @param  array<string,array<string,string>>  $items
-     */
-    protected function save(array $items): void
+    public function save(array $items): void
     {
         $handle = fopen($this->path, 'w');
         assert($handle !== false);
@@ -51,22 +28,6 @@ class CsvSource extends CsvReadableSource implements SyncSource
         }
 
         fclose($handle);
-    }
-
-    /**
-     * Put the models to the source. Update if exists, create if not.
-     *
-     * @param  SyncModel[]  $models
-     */
-    protected function put(array $models): void
-    {
-        $items = $this->load();
-
-        foreach ($models as $model) {
-            $items[$model->id] = $model->item;
-        }
-
-        $this->save($items);
     }
 
     /**
