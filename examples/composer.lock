@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "highliuk/sync",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/HighLiuk/sync-php.git",
-                "reference": "16cc304035495e0ea3501f3cab2fadbd82d92a5f"
+                "reference": "00c13fe6095efcbedb78d824c4a15d35f1e1c58e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/HighLiuk/sync-php/zipball/16cc304035495e0ea3501f3cab2fadbd82d92a5f",
-                "reference": "16cc304035495e0ea3501f3cab2fadbd82d92a5f",
+                "url": "https://api.github.com/repos/HighLiuk/sync-php/zipball/00c13fe6095efcbedb78d824c4a15d35f1e1c58e",
+                "reference": "00c13fe6095efcbedb78d824c4a15d35f1e1c58e",
                 "shasum": ""
             },
             "require-dev": {
@@ -28,9 +28,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "HighLiuk\\Sync\\": "src/",
-                    "HighLiuk\\Sync\\Tests\\": "tests/",
-                    "HighLiuk\\Sync\\Examples\\": "examples/"
+                    "HighLiuk\\Sync\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -51,9 +49,9 @@
             ],
             "support": {
                 "issues": "https://github.com/HighLiuk/sync-php/issues",
-                "source": "https://github.com/HighLiuk/sync-php/tree/1.3.0"
+                "source": "https://github.com/HighLiuk/sync-php/tree/1.3.1"
             },
-            "time": "2024-01-25T21:37:58+00:00"
+            "time": "2024-01-25T22:13:29+00:00"
         }
     ],
     "packages-dev": [],
