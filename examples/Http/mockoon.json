@@ -1,0 +1,88 @@
+{
+  "uuid": "ed4ce577-3cb3-4e10-a750-82200a38fe9e",
+  "lastMigration": 32,
+  "name": "Mockoon",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "d0c70cab-2d5b-410d-9dee-b17543305619",
+      "type": "crud",
+      "documentation": "",
+      "method": "",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "e28416c1-c4e9-4320-97c3-bbd4e43e986c",
+          "body": "{}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "DATABUCKET",
+          "filePath": "",
+          "databucketID": "aqya",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "d0c70cab-2d5b-410d-9dee-b17543305619"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [
+    {
+      "uuid": "16003cf8-089f-40b9-8c08-1fe57368d046",
+      "id": "aqya",
+      "name": "Users",
+      "documentation": "",
+      "value": "[\n  {\n    \"id\": \"{{guid}}\",\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@gmail.com\"\n  },\n  {\n    \"id\": \"{{guid}}\",\n    \"name\": \"Jane Doe\",\n    \"email\": \"jane.doe@gmail.com\"\n  }\n]\n"
+    }
+  ],
+  "callbacks": []
+}
