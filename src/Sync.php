@@ -11,25 +11,9 @@ use HighLiuk\Sync\Interfaces\WritableSource;
 class Sync
 {
     /**
-     * Models to write (on MASTER but NOT SLAVE).
-     *
-     * @var SyncModel[]
+     * The loader utility used to load data from the sources.
      */
-    public readonly array $writes;
-
-    /**
-     * Models to update (on SLAVE and MASTER).
-     *
-     * @var SyncModel[]
-     */
-    public readonly array $updates;
-
-    /**
-     * Model ids to delete (on SLAVE but NOT MASTER).
-     *
-     * @var string[]
-     */
-    public readonly array $deletes;
+    public readonly SyncLoader $loader;
 
     /**
      * Create a new Sync object.
@@ -38,17 +22,7 @@ class Sync
         protected ReadableSource $master,
         protected ReadableSource&WritableSource $slave
     ) {
-        $master_ids = $master->list();
-        $slave_ids = $slave->list();
-
-        // Write: on Master, not Slave
-        $this->writes = $master->get(array_values(array_diff($master_ids, $slave_ids)));
-
-        // Update: On both and different properties
-        $this->updates = $master->get(array_values(array_intersect($master_ids, $slave_ids)));
-
-        // Delete: not on Master, on Slave
-        $this->deletes = array_values(array_diff($slave_ids, $master_ids));
+        $this->loader = new SyncLoader($master, $slave);
     }
 
     /**
@@ -58,8 +32,10 @@ class Sync
      */
     public function syncWrites(): static
     {
-        if (! empty($this->writes)) {
-            $this->slave->create($this->writes);
+        $writes = $this->loader->getWrites();
+
+        if (! empty($writes)) {
+            $this->slave->create($writes);
         }
 
         return $this;
@@ -72,8 +48,10 @@ class Sync
      */
     public function syncUpdates(): static
     {
-        if (! empty($this->updates)) {
-            $this->slave->update($this->updates);
+        $updates = $this->loader->getUpdates();
+
+        if (! empty($updates)) {
+            $this->slave->update($updates);
         }
 
         return $this;
@@ -86,8 +64,10 @@ class Sync
      */
     public function syncDeletes(): static
     {
-        if (! empty($this->deletes)) {
-            $this->slave->delete($this->deletes);
+        $deletes = $this->loader->getDeletes();
+
+        if (! empty($deletes)) {
+            $this->slave->delete($deletes);
         }
 
         return $this;
