@@ -42,13 +42,13 @@ class Sync
         $slave_ids = $slave->list();
 
         // Write: on Master, not Slave
-        $this->writes = $master->get(array_diff($master_ids, $slave_ids));
+        $this->writes = $master->get(array_values(array_diff($master_ids, $slave_ids)));
 
         // Update: On both and different properties
-        $this->updates = $master->get(array_intersect($master_ids, $slave_ids));
+        $this->updates = $master->get(array_values(array_intersect($master_ids, $slave_ids)));
 
         // Delete: not on Master, on Slave
-        $this->deletes = array_diff($slave_ids, $master_ids);
+        $this->deletes = array_values(array_diff($slave_ids, $master_ids));
     }
 
     /**
