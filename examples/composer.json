@@ -3,7 +3,8 @@
         "psr-4": {
             "Examples\\Csv\\": "Csv/src/",
             "Examples\\Http\\": "Http/src/",
-            "Examples\\Json\\": "Json/src/"
+            "Examples\\Json\\": "Json/src/",
+            "Examples\\Sql\\": "Sql/src/"
         }
     },
     "require": {

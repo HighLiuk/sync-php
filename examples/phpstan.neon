@@ -4,4 +4,5 @@ parameters:
         - Csv
         - Http
         - Json
+        - Sql
         - index.php
