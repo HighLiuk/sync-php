@@ -58,7 +58,9 @@ class Sync
      */
     public function syncWrites(): static
     {
-        $this->slave->create($this->writes);
+        if (! empty($this->writes)) {
+            $this->slave->create($this->writes);
+        }
 
         return $this;
     }
@@ -70,7 +72,9 @@ class Sync
      */
     public function syncUpdates(): static
     {
-        $this->slave->update($this->updates);
+        if (! empty($this->updates)) {
+            $this->slave->update($this->updates);
+        }
 
         return $this;
     }
@@ -82,7 +86,9 @@ class Sync
      */
     public function syncDeletes(): static
     {
-        $this->slave->delete($this->deletes);
+        if (! empty($this->deletes)) {
+            $this->slave->delete($this->deletes);
+        }
 
         return $this;
     }
