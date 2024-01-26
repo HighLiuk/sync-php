@@ -333,16 +333,16 @@
         },
         {
             "name": "highliuk/sync",
-            "version": "1.3.1",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/HighLiuk/sync-php.git",
-                "reference": "00c13fe6095efcbedb78d824c4a15d35f1e1c58e"
+                "reference": "2972c7a6014304bb9e4b1e08c9386e1d3b989ab9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/HighLiuk/sync-php/zipball/00c13fe6095efcbedb78d824c4a15d35f1e1c58e",
-                "reference": "00c13fe6095efcbedb78d824c4a15d35f1e1c58e",
+                "url": "https://api.github.com/repos/HighLiuk/sync-php/zipball/2972c7a6014304bb9e4b1e08c9386e1d3b989ab9",
+                "reference": "2972c7a6014304bb9e4b1e08c9386e1d3b989ab9",
                 "shasum": ""
             },
             "require-dev": {
@@ -374,9 +374,9 @@
             ],
             "support": {
                 "issues": "https://github.com/HighLiuk/sync-php/issues",
-                "source": "https://github.com/HighLiuk/sync-php/tree/1.3.1"
+                "source": "https://github.com/HighLiuk/sync-php/tree/1.3.3"
             },
-            "time": "2024-01-25T22:13:29+00:00"
+            "time": "2024-01-26T09:43:36+00:00"
         },
         {
             "name": "psr/http-client",
