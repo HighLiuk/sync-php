@@ -8,7 +8,7 @@ use HighLiuk\Sync\Interfaces\WritableSource;
 /**
  * Describes a flow of data from one source to one (or multiple) destination(s).
  */
-class SyncFlow
+class Flow
 {
     /**
      * The list of syncs to perform.
