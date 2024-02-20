@@ -3,7 +3,9 @@
 namespace HighLiuk\Sync;
 
 use HighLiuk\Sync\Interfaces\ReadableSource;
+use HighLiuk\Sync\Interfaces\SyncNotifier;
 use HighLiuk\Sync\Interfaces\WritableSource;
+use Throwable;
 
 /**
  * Syncs two sources.
@@ -16,6 +18,13 @@ class Sync
     public readonly SyncLoader $loader;
 
     /**
+     * The notifiers to call during the sync.
+     *
+     * @var SyncNotifier[]
+     */
+    protected array $notifiers = [];
+
+    /**
      * Create a new Sync object.
      */
     public function __construct(
@@ -23,6 +32,18 @@ class Sync
         protected ReadableSource&WritableSource $slave
     ) {
         $this->loader = new SyncLoader($master, $slave);
+    }
+
+    /**
+     * Add a notifier to the sync.
+     *
+     * @return $this
+     */
+    public function addNotifier(SyncNotifier $notifier): static
+    {
+        $this->notifiers[] = $notifier;
+
+        return $this;
     }
 
     /**
@@ -35,7 +56,21 @@ class Sync
         $writes = $this->loader->getWrites();
 
         if (! empty($writes)) {
-            $this->slave->create($writes);
+            foreach ($this->notifiers as $notifier) {
+                $notifier->beforeCreate($writes);
+            }
+
+            try {
+                $this->slave->create($writes);
+
+                foreach ($this->notifiers as $notifier) {
+                    $notifier->afterCreate($writes);
+                }
+            } catch (Throwable $e) {
+                foreach ($this->notifiers as $notifier) {
+                    $notifier->onCreateError($writes, $e);
+                }
+            }
         }
 
         return $this;
@@ -51,7 +86,21 @@ class Sync
         $updates = $this->loader->getUpdates();
 
         if (! empty($updates)) {
-            $this->slave->update($updates);
+            foreach ($this->notifiers as $notifier) {
+                $notifier->beforeUpdate($updates);
+            }
+
+            try {
+                $this->slave->update($updates);
+
+                foreach ($this->notifiers as $notifier) {
+                    $notifier->afterUpdate($updates);
+                }
+            } catch (Throwable $e) {
+                foreach ($this->notifiers as $notifier) {
+                    $notifier->onUpdateError($updates, $e);
+                }
+            }
         }
 
         return $this;
@@ -67,7 +116,21 @@ class Sync
         $deletes = $this->loader->getDeletes();
 
         if (! empty($deletes)) {
-            $this->slave->delete($deletes);
+            foreach ($this->notifiers as $notifier) {
+                $notifier->beforeDelete($deletes);
+            }
+
+            try {
+                $this->slave->delete($deletes);
+
+                foreach ($this->notifiers as $notifier) {
+                    $notifier->afterDelete($deletes);
+                }
+            } catch (Throwable $e) {
+                foreach ($this->notifiers as $notifier) {
+                    $notifier->onDeleteError($deletes, $e);
+                }
+            }
         }
 
         return $this;

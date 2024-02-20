@@ -3,6 +3,7 @@
 namespace HighLiuk\Sync;
 
 use HighLiuk\Sync\Interfaces\ReadableSource;
+use HighLiuk\Sync\Interfaces\SyncNotifier;
 use HighLiuk\Sync\Interfaces\WritableSource;
 
 /**
@@ -37,6 +38,20 @@ class Flow
     public function to(ReadableSource&WritableSource $destination): static
     {
         $this->syncs[] = new Sync($this->source, $destination);
+
+        return $this;
+    }
+
+    /**
+     * Adds a notifier to the flow.
+     *
+     * @return $this
+     */
+    public function notify(SyncNotifier $notifier): static
+    {
+        foreach ($this->syncs as $sync) {
+            $sync->addNotifier($notifier);
+        }
 
         return $this;
     }
