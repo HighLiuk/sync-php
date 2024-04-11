@@ -9,6 +9,13 @@ use HighLiuk\Sync\Interfaces\ReadableSource;
  */
 class SyncLoader
 {
+    /**
+     * The loaded IDs (master, slave).
+     *
+     * @var ?array{string[],string[]}
+     */
+    protected ?array $ids = null;
+
     public function __construct(
         public readonly ReadableSource $master,
         public readonly ReadableSource $slave
@@ -22,13 +29,11 @@ class SyncLoader
      */
     protected function load(): array
     {
-        static $ids = null;
-
-        if ($ids !== null) {
-            return $ids;
+        if ($this->ids !== null) {
+            return $this->ids;
         }
 
-        return $ids = [
+        return $this->ids = [
             $this->master->list(),
             $this->slave->list(),
         ];
